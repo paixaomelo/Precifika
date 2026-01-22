@@ -1,0 +1,2 @@
+# Precifika
+Precificador inteligente
