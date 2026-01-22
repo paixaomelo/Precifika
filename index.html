@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrecifiKa | Inteligência de Preços</title>
+    <!-- Google Fonts: Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fa-solid fa-chart-line me-2 text-green"></i>
+                PrecifiKa
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Full Width Bold -->
+    <header class="hero-section text-center animate-in">
+        <div class="container">
+            <h1 class="display-3 hero-title mb-3">Decisões de Preço <br><span class="text-gold">Inteligentes &
+                    Lucrativas</span></h1>
+            <p class="hero-subtitle mb-4 mx-auto" style="max-width: 600px;">
+                O sistema financeiro feito para o mercado angolano. Transforme custos operacionais em margem real.
+            </p>
+            <button class="btn btn-gold btn-lg px-5 shadow-lg" onclick="app.scrollToSection('step-1')">
+                Iniciar Precificação
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Step 1: Data Collection -->
+        <section id="step-1" class="section-card mb-5 animate-in">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                    <div class="step-badge me-3">1</div>
+                    <div>
+                        <h2 class="h4 m-0">Custos & Produção</h2>
+                        <small class="text-muted">Levantamento de dados base</small>
+                    </div>
+                </div>
+
+                <form id="productForm">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Nome do Produto/Serviço</label>
+                            <input type="text" class="form-control" id="productName"
+                                placeholder="Ex: Consultoria Financeira" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de Oferta</label>
+                            <select class="form-select" id="productType">
+                                <option value="product">Produto Físico</option>
+                                <option value="service" selected>Serviço Profissional</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="text-muted opacity-25">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-green">Capacidade Total / Estimada</label>
+                            <input type="number" class="form-control" id="totalCapacity"
+                                placeholder="Qtd mensal (Ex: 100)" required>
+                            <div class="form-text small">Total de unidades/horas que você vende no período dos custos
+                                abaixo.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-green">Custo Variável Unitário</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Kz</span>
+                                <input type="number" class="form-control" id="unitVariableCost" placeholder="0.00"
+                                    required>
+                            </div>
+                            <div class="form-text small">Custo direto para fazer 1 unidade (Matéria-prima, Embalagem
+                                unitária).</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Qtd. Mínima por Venda</label>
+                            <input type="number" class="form-control" id="minSaleQty" value="1" required>
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-4 rounded-3 mb-4 border">
+                        <h4 class="h6 mb-3 text-secondary">Custos Fixos & Despesas Operacionais</h4>
+                        <p class="text-muted small mb-3">Liste todos os custos mensais que existem
+                            <strong>independente</strong> de vender ou não (Aluguel, Salários, Software, Marketing fixo,
+                            etc).
+                        </p>
+
+                        <div id="costsContainer">
+                            <!-- Cost items will be injected here -->
+                        </div>
+
+                        <button type="button" class="btn btn-outline-secondary btn-sm mt-2"
+                            onclick="app.addCostField()">
+                            <i class="fa-solid fa-plus me-1"></i> Adicionar Despesa Fixa
+                        </button>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="button" class="btn btn-primary px-5" onclick="app.goToStep2()">
+                            Calcular Custos <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Step 2: Financial Results -->
+        <section id="step-2" class="d-none animate-in">
+            <div class="section-card mb-5">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="step-badge me-3">2</div>
+                        <div>
+                            <h2 class="h4 m-0">Análise de Viabilidade</h2>
+                            <small class="text-muted">Seus números reais</small>
+                        </div>
+                    </div>
+
+                    <div class="row text-center g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Custo Total Operacional</div>
+                                <div class="stat-value font-numeric" id="displayTotalCost">Kz 0,00</div>
+                                <small class="text-muted d-block mt-2">Variável + Fixo</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card highlight shadow-lg">
+                                <div class="stat-label text-white-50">Custo Final Unitário</div>
+                                <div class="stat-value text-white font-numeric" id="displayUnitCost">Kz 0,00</div>
+                                <span class="badge bg-gold text-dark mt-2">Ponto de Equilíbrio</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Margem Base (50%)</div>
+                                <div class="stat-value font-numeric text-success" id="displayIdealPrice">Kz 0,00</div>
+                                <small class="text-muted d-block mt-2">Sugestão inicial</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-primary px-5" onclick="app.goToStep3()">
+                            Analisar Mercado <i class="fa-solid fa-chart-pie ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Market Analysis -->
+        <section id="step-3" class="d-none animate-in">
+            <div class="section-card mb-5">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="step-badge me-3">3</div>
+                        <div>
+                            <h2 class="h4 m-0">Inteligência de Mercado</h2>
+                            <small class="text-muted">Comparativo estratégico</small>
+                        </div>
+                    </div>
+
+                    <p class="mb-4 text-muted">Para dominar o mercado, precisamos posicionar seu preço em relação aos
+                        concorrentes. Insira 3 referências:</p>
+
+                    <div class="row g-3 mb-4 justify-content-center">
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Concorrente 1</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Kz</span>
+                                <input type="number" class="form-control competitor-price font-numeric" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Concorrente 2</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Kz</span>
+                                <input type="number" class="form-control competitor-price font-numeric" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Concorrente 3</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Kz</span>
+                                <input type="number" class="form-control competitor-price font-numeric" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="marketAnalysisResult" class="alert alert-light border d-none animate-in">
+                        <!-- Analysis text will go here -->
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary px-5" onclick="app.goToStep4()">
+                            Gerar Estratégia de Venda <i class="fa-solid fa-wand-magic-sparkles ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Strategy -->
+        <section id="step-4" class="d-none animate-in">
+            <div class="mb-5">
+                <div class="text-center mb-5">
+                    <h2 class="h2 mb-2">Cenários de Lucratividade</h2>
+                    <p class="text-muted">Selecione a estratégia que melhor se adapta ao seu momento atual.</p>
+                </div>
+
+                <div class="row g-4 align-items-stretch" id="strategyCards">
+                    <!-- Cards will be injected -->
+                </div>
+
+                <div class="text-center mt-5">
+                    <button class="btn btn-outline-secondary px-5" onclick="app.goToStep5()">
+                        Ver Plano de Execução <i class="fa-solid fa-list-check ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 5: Sales Plan -->
+        <section id="step-5" class="d-none animate-in">
+            <div class="section-card border-top border-5 border-success border-0 shadow-lg">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="step-badge me-3 bg-success text-white"><i class="fa-solid fa-rocket"></i></div>
+                        <div>
+                            <h2 class="h4 m-0">Plano de Ação</h2>
+                            <small class="text-muted">Metas claras para execução</small>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-end g-3 mb-4">
+                        <div class="col-md-5">
+                            <label class="form-label">Ciclo de Vendas (Dias)</label>
+                            <input type="number" id="salesDays" class="form-control" value="30">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Meta de Lucro Líquido (Kz)</label>
+                            <input type="number" id="profitTarget" class="form-control" placeholder="Ex: 500000">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success w-100" onclick="app.calculatePlan()">Calcular</button>
+                        </div>
+                    </div>
+
+                    <div id="salesPlanResult" class="d-none">
+                        <!-- Plan details -->
+                    </div>
+
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <button class="btn btn-outline-secondary px-4" onclick="app.generateReport()">
+                            <i class="fa-solid fa-print me-2"></i> Baixar Relatório PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden Printable Report Container -->
+        <div id="printable-report" class="d-none"></div>
+
+    </main>
+
+    <footer class="text-center py-5 mt-5 border-top">
+        <p class="text-muted small mb-0">&copy; 2026 PrecifiKa Sistemas. Design by Luanda.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
